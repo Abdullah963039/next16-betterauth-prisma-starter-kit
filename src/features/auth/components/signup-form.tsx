@@ -1,37 +1,41 @@
-'use client'
+"use client";
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@/components/ui/button'
-import { SignupFormValues, signupSchema } from './validation'
-import { FormInput, FormInputPassword } from '@/components/form/form-input'
-import { toast } from 'sonner'
-import { authClient } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { SignupFormValues, signupSchema } from "./validation";
+import { FormInput, FormInputPassword } from "@/components/form/form-input";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { FormCheckbox } from "@/components/form/form-checkbox";
+import { serverSignUp } from "../actions";
 
 export const SignupForm = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' }
-  })
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      remember: true,
+    },
+  });
 
   async function onSubmit(data: SignupFormValues) {
     try {
-      await authClient.signUp.email({
-        ...data,
-        fetchOptions: {
-          onError(context) {
-            toast.error(context.error.message ?? context.error.statusText)
-          },
-          onSuccess() {
-            router.push('/dashboard')
-          }
-        }
-      })
+      const res = await serverSignUp(data);
+
+      if (res?.error) {
+        toast.error(res.message);
+
+        return;
+      }
+      router.push("/dashboard");
     } catch {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong");
     }
   }
 
@@ -61,14 +65,20 @@ export const SignupForm = () => {
         label="Confirm password"
       />
 
+      <FormCheckbox
+        control={form.control}
+        name="remember"
+        label="Remember me"
+      />
+
       <Button
         type="submit"
-        size={'lg'}
+        size={"lg"}
         className="mt-4 max-md:w-full"
         disabled={form.formState.isSubmitting}
       >
         Sign up
       </Button>
     </form>
-  )
-}
+  );
+};

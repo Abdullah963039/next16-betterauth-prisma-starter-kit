@@ -13,4 +13,11 @@ export const auth = betterAuth({
     autoSignIn: true,
     requireEmailVerification: false,
   },
+  advanced: {
+    cookiePrefix: "prisma-starter",
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 3, // 3 days
+    updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+  },
 });

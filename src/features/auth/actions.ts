@@ -1,13 +1,14 @@
-'use server'
+"use server";
 
-import { auth } from '@/lib/auth'
-import { SigninFormValues, SignupFormValues } from './components/validation'
-import { headers } from 'next/headers'
+import { auth } from "@/lib/auth";
+import { SigninFormValues, SignupFormValues } from "./components/validation";
+import { headers } from "next/headers";
 
 export async function serverSignUp({
   email,
   name,
-  password
+  password,
+  remember,
 }: SignupFormValues) {
   try {
     await auth.api.signUpEmail({
@@ -15,46 +16,47 @@ export async function serverSignUp({
         name,
         email,
         password,
-        callbackURL: '/dashboard'
+        callbackURL: "/dashboard",
+        rememberMe: remember,
       },
-      headers: await headers()
-    })
+      headers: await headers(),
+    });
   } catch (error: unknown) {
-    console.log(error)
+    console.log(error);
 
-    return { error: true, message: 'Internal Server Error' }
+    return { error: true, message: "Internal Server Error" };
   }
 }
 
 export async function serverSignIn({
   email,
   password,
-  remember
+  remember,
 }: SigninFormValues) {
   try {
     await auth.api.signInEmail({
       body: {
         email,
         password,
-        rememberMe: remember
+        rememberMe: remember,
       },
-      headers: await headers()
-    })
+      headers: await headers(),
+    });
   } catch (error: unknown) {
-    console.log(error)
+    console.log(error);
 
-    return { error: true, message: 'Internal Server Error' }
+    return { error: true, message: "Internal Server Error" };
   }
 }
 
 export async function serverSignOut() {
   try {
     await auth.api.signOut({
-      headers: await headers()
-    })
+      headers: await headers(),
+    });
   } catch (error: unknown) {
-    console.log(error)
+    console.log(error);
 
-    return { error: true, message: 'Internal Server Error' }
+    return { error: true, message: "Internal Server Error" };
   }
 }
