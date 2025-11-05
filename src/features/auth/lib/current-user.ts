@@ -5,7 +5,7 @@ import { isExpired } from "@/lib/utils";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function currentUser() {
+export async function currentUser(): Promise<typeof auth.$Infer.Session.user> {
   const response = await auth.api.getSession({ headers: await headers() });
 
   if (response == null) redirect("/signup");

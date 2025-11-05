@@ -3,7 +3,7 @@ import { isExpired } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-export function useUser() {
+export function useUser(): typeof authClient.$Infer.Session.user | null {
   const { data, error } = authClient.useSession();
 
   if (error != null) return null;

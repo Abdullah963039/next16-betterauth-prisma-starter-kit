@@ -1,4 +1,4 @@
-import { noRequireAuth } from "@/features/auth/lib/check-auth";
+import { requireUnauth } from "@/features/auth/lib/utils";
 import { ReactNode } from "react";
 
 interface AuthLayoutProps {
@@ -6,7 +6,7 @@ interface AuthLayoutProps {
 }
 
 export default async function AuthLayout({ children }: AuthLayoutProps) {
-  await noRequireAuth();
+  await requireUnauth();
 
   return (
     <div className="bg-primary/5 flex min-h-dvh flex-col items-center justify-center">

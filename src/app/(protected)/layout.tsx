@@ -1,4 +1,4 @@
-import { requireAuth } from "@/features/auth/lib/check-auth";
+import { requireAuth } from "@/features/auth/lib/utils";
 import { ReactNode } from "react";
 
 interface ProtectedLayoutProps {
